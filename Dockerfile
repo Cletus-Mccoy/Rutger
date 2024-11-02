@@ -42,14 +42,14 @@ COPY --from=build /opt/venv /opt/venv
 # Set the PATH for the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy environment setup script
+# Copy environment setup script (Obsoloted by the mounting of the .env file)
 COPY set_env.sh /app/set_env.sh
 RUN chmod +x /app/set_env.sh
 
-# Expose the SSH port (default is 22)
+# Expose the SSH port
 EXPOSE 22
 
-# Expose the WebUI port (make sure to set this variable in your docker-compose or .env)
+# Expose the WebUI port (make sure to copy example.env to .env)
 EXPOSE ${WEB_UI_PORT}
 
 # Start SSH service and run the setup script
