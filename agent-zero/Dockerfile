@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /a0
 
 # Clone the Agent0 repository
 RUN git clone https://github.com/frdel/agent-zero.git .
@@ -42,9 +42,12 @@ COPY --from=build /opt/venv /opt/venv
 # Set the PATH for the virtual environment
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy environment setup script (Obsoloted by the mounting of the .env file)
-COPY set_env.sh /app/set_env.sh
-RUN chmod +x /app/set_env.sh
+# Set the working directory
+WORKDIR /a0
+
+# Copy environment setup script
+COPY set_env.sh /a0/set_env.sh
+RUN chmod +x /a0/set_env.sh
 
 # Expose the SSH port
 EXPOSE 22
@@ -52,5 +55,8 @@ EXPOSE 22
 # Expose the WebUI port (make sure to copy example.env to .env)
 EXPOSE ${WEB_UI_PORT}
 
-# Start SSH service and run the setup script
-CMD ["/bin/bash", "-c", "/usr/sbin/sshd && /app/set_env.sh && tail -f /dev/null"]
+# Set the entrypoint to ensure the script runs correctly
+ENTRYPOINT ["/a0/set_env.sh"]
+
+# Start the SSH service in the background and keep the container running
+CMD ["service", "ssh", "start"]

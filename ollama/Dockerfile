@@ -9,8 +9,12 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory
 WORKDIR /ollama
 
+# Copy ollama setup script 
+COPY run_ollama.sh /ollama/run_ollama.sh
+RUN chmod +x /ollama/run_ollama.sh
+
 # Expose interface
 EXPOSE 11434
 
 # Run ollama .sh script
-CMD ["/bin/bash", "-c", "run_ollama.sh && tail -f /dev/null"]
+CMD ["/bin/bash", "-c", "/ollama/run_ollama.sh && tail -f /dev/null"]

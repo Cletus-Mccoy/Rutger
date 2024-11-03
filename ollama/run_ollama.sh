@@ -22,5 +22,5 @@ docker run -d $GPU_FLAG -p "$OLLAMA_PORT:11434" --name ollama ollama/ollama
 sleep 5
 
 # Pull and run model inside the container (TODO)
-# pull nomic
-# run llama3.2:8b
+ollama pull nomic-embed-text
+ollama run llama3.1

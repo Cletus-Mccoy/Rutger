@@ -1,18 +1,36 @@
+# agent-zero/docker-compose.yml
+
 services:
   agentzero:
-    build: .
+    build:
+      context: ./agent-zero  # Build context for Agent Zero
+      dockerfile: Dockerfile
     container_name: agentzero_${INSTANCE_ID}
-    privileged: true  # Enable privileged mode
+    privileged: true
     environment:
       - API_KEY_OPENAI=${API_KEY_OPENAI}
       - INSTANCE_ID=${INSTANCE_ID}
+      - WEB_UI_PORT=${WEB_UI_PORT}
     volumes:
       - ${LOCAL_AGENT_DIR}:/app
     ports:
-      - "${WEB_UI_PORT}:80" # Map the internal WebUI to port 80 of the container
-      - "22:22" # Map for SSH throughput
+      - "${WEB_UI_PORT}:80" # Map for Web UI
+      - "22:22"  # Map for SSH
     networks:
-      - agent_network  # Network for intracontainer communication
+      - agent_network
+    env_file:
+      - ./agent-zero/.env
+
+  ollama:
+    build:
+      context: ./ollama  # Build context for Ollama
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${OLLAMA_PORT} # (Do we need to map ports??)
+    networks:
+      - agent_network
+    env_file:
+      - ./ollama/.env
 
 networks:
   agent_network:
