@@ -1,9 +1,9 @@
-# ollama/entrypoint.sh
 #!/bin/bash
 
-# Pull the latest Ollama Docker image
-echo "Pulling the latest Ollama Docker image..."
-docker pull ollama/ollama
+# Download the latest Ollama release
+echo "Installing Ollama using apt..."
+apt update
+apt install -y ollama
 
 # Start the Ollama container
 echo "Starting the Ollama container on port $OLLAMA_PORT..."
@@ -15,12 +15,9 @@ else
     echo "No NVIDIA GPU detected. Starting container with CPU support only."
 fi
 
-# Run the Ollama container with specified configuration
-docker run -d $GPU_FLAG -p "$OLLAMA_PORT:11434" --name ollama ollama/ollama
-
-# Wait for a few seconds to let the container initialize
+# Wait for a few seconds to let the process initialize
 sleep 5
 
-# Pull and run model inside the container (TODO)
-ollama pull nomic-embed-text
-ollama run llama3.1
+# Pull and run model inside the container 
+ollama pull $OLLAMA_EMBED_MODEL
+ollama run $OLLAMA_CHAT_MODEL --port "$OLLAMA_PORT" $GPU_FLAG &
