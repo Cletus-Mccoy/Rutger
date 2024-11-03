@@ -1,20 +1,23 @@
-# ollama/Dockerfile
+# Use a lightweight Python base image
 FROM python:3.12-slim
 
 # Install necessary packages for Ollama
 RUN apt-get update && apt-get install -y \
-    docker.io \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Install Ollama
+RUN curl -sSfL https://ollama.com/download.sh | sh
+
+# Set the working directory for the Ollama application
 WORKDIR /ollama
 
-# Copy ollama setup script 
+# Copy the Ollama setup script into the container
 COPY run_ollama.sh /ollama/run_ollama.sh
 RUN chmod +x /ollama/run_ollama.sh
 
-# Expose interface
+# Expose the Ollama service port
 EXPOSE 11434
 
-# Run ollama .sh script
-CMD ["/bin/bash", "-c", "/ollama/run_ollama.sh && tail -f /dev/null"]
+# Use an entrypoint script to handle both setup and interactive sessions
+ENTRYPOINT ["/bin/bash", "-c", "/ollama/run_ollama.sh; exec /bin/bash"]

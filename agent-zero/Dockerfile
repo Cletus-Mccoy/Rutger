@@ -50,6 +50,9 @@ FROM python:3.12-slim AS runtime
     # Set the working directory
     WORKDIR /a0
 
+    #  Copy the modified Agent0 web UI script (serving on 0.0.0.0 instead of 127.0.0.1)
+    COPY run_ui.py run_ui.py
+
     # Copy environment setup script
     COPY set_env.sh /a0/set_env.sh
     RUN chmod +x /a0/set_env.sh

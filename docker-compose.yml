@@ -14,7 +14,7 @@ services:
     volumes:
       - ${LOCAL_AGENT_DIR}:/app
     ports:
-      - "${WEB_UI_PORT}:80" # Map for Web UI
+      - "80:${WEB_UI_PORT}" # Map for Web UI
       - "22:22"  # Map for SSH
     networks:
       - agent_network
