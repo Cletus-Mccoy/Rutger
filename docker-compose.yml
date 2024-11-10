@@ -10,7 +10,7 @@ services:
       - INSTANCE_ID=${INSTANCE_ID}
       - WEB_UI_PORT=${WEB_UI_PORT}
     volumes:
-      - ${LOCAL_AGENT_DIR}:/app
+      - ${LOCAL_AGENT_DIR}:/a0
     ports:
       - "80:${WEB_UI_PORT}"
       - "22:22"

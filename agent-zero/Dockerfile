@@ -29,14 +29,10 @@ FROM python:3.12-slim AS build
 # Stage 1 (runtime): Create a minimal image with the virtual environment and necessary packages
 FROM python:3.12-slim AS runtime
 
-    # Install necessary packages for SSH and Docker
+    # Install necessary packages for Docker
     RUN apt-get update && apt-get install -y \
-        openssh-server \
         docker.io \
         && rm -rf /var/lib/apt/lists/*
-
-    # Create the SSH directory
-    RUN mkdir /var/run/sshd
 
     # Copy the virtual environment from the build stage
     COPY --from=build /opt/venv /opt/venv
@@ -53,15 +49,12 @@ FROM python:3.12-slim AS runtime
     #  Copy the modified Agent0 web UI script (serving on 0.0.0.0 instead of 127.0.0.1)
     COPY run_ui.py run_ui.py
 
-     #  Copy the modified Agent0 initialization (use ollama instead of openAI)
+    # Copy the modified Agent0 initialization (use ollama instead of openAI)
     COPY initialize.py initialize.py
 
     # Copy environment setup script
     COPY set_env.sh /a0/set_env.sh
     RUN chmod +x /a0/set_env.sh
-
-    # Expose the SSH port
-    EXPOSE 22
 
     # Expose the WebUI port (make sure to copy example.env to .env)
     EXPOSE ${WEB_UI_PORT}
@@ -69,5 +62,5 @@ FROM python:3.12-slim AS runtime
     # Set the entrypoint to ensure the script runs correctly
     ENTRYPOINT ["/a0/set_env.sh"]
 
-    # Start the SSH service in the background
-    CMD ["service", "ssh", "start"]
+    # Start the Docker daemon in the background
+    CMD ["sh", "-c", "dockerd & while sleep 1000; do :; done"]
