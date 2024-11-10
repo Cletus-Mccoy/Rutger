@@ -6,13 +6,13 @@ import threading
 import uuid
 from flask import Flask, request, jsonify, Response
 from flask_basicauth import BasicAuth
-from agent import AgentContext
+from agent import AgentContext # type: ignore
 from initialize import initialize
-from python.helpers import files
-from python.helpers.files import get_abs_path
-from python.helpers.print_style import PrintStyle
-from python.helpers.dotenv import load_dotenv
-from python.helpers import persist_chat
+from python.helpers import files # type: ignore
+from python.helpers.files import get_abs_path # type: ignore
+from python.helpers.print_style import PrintStyle # type: ignore
+from python.helpers.dotenv import load_dotenv # type: ignore
+from python.helpers import persist_chat # type: ignore
 
 
 # initialize the internal Flask server

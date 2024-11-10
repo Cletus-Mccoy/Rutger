@@ -1,39 +1,38 @@
 services:
   agentzero:
-    build:
-      context: ./agent-zero
-      dockerfile: Dockerfile
-    container_name: agentzero_${INSTANCE_ID}
-    privileged: true
-    environment:
-      - API_KEY_OPENAI=${API_KEY_OPENAI}
+    build:                                              # Path to your local Agent Zero Dockerfile directory
+      context: ./agent-zero 
+      dockerfile: Dockerfile 
+    container_name: agentzero_${INSTANCE_ID}            # Unique container name for each instance
+    privileged: true                                    # Required for Docker-in-Docker
+    environment:                                        # Maps local to remote environment variables
+      - API_KEY_OPENAI=${API_KEY_OPENAI} 
       - INSTANCE_ID=${INSTANCE_ID}
       - WEB_UI_PORT=${WEB_UI_PORT}
     volumes:
-      - ${LOCAL_AGENT_DIR}:/a0
+      - ${LOCAL_AGENT_DIR}:/a0                          # Mount local agent directory
     ports:
-      - "80:${WEB_UI_PORT}"
-      - "22:22"
+      - "80:${WEB_UI_PORT}"                             # Expose web UI port
     networks:
-      - agent_network
+      - agent_network                                   # Connect to shared agent_network
     env_file:
-      - ./agent-zero/.env
+      - ./agent-zero/.env                               # Load environment variables from .env file
     depends_on:
-      - ollama  # Ensure ollama starts first
+      - ollama                                          # Ensure ollama starts first
 
   ollama:
     build:
-      context: ./ollama # Path to your local Ollama Dockerfile directory
-      dockerfile: Dockerfile  # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
-    environment:
+      context: ./ollama                                 # Path to your local Ollama Dockerfile directory
+      dockerfile: Dockerfile                            # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
+    environment:                                        # Maps local to remote environment variables            
       - OLLAMA_EMBED_MODEL=${OLLAMA_EMBED_MODEL}
       - OLLAMA_CHAT_MODEL=${OLLAMA_CHAT_MODEL}
-      - OLLAMA_PORT=${OLLAMA_PORT:-11434}  # Default port if not set
+      - OLLAMA_PORT=${OLLAMA_PORT:-11434}               # Default port if not set
     networks:
-      - agent_network
+      - agent_network                                   # Connect to shared agent_network
     ports:
-      - "${OLLAMA_PORT}:${OLLAMA_PORT}"
-    deploy:
+      - "${OLLAMA_PORT}:${OLLAMA_PORT}"                 # Expose Ollama port
+    deploy:                                             # Deploy Ollama using GPU resources
       resources:
         reservations:
           devices:
@@ -41,11 +40,10 @@ services:
               count: 1
               capabilities: ["gpu"]
 
-
-networks:
+networks:                                               # Create shared agent_network  
   agent_network:
-    driver: bridge
+    driver: bridge                                      # Use bridge driver
 
-volumes:
+volumes:                                                # Create shared volume for Ollama data                      
   ollama_data:
-    driver: local
+    driver: local                                        # Use local driver                
