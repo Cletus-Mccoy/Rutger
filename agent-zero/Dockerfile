@@ -53,6 +53,9 @@ FROM python:3.12-slim AS runtime
     #  Copy the modified Agent0 web UI script (serving on 0.0.0.0 instead of 127.0.0.1)
     COPY run_ui.py run_ui.py
 
+     #  Copy the modified Agent0 initialization (use ollama instead of openAI)
+    COPY initialize.py initialize.py
+
     # Copy environment setup script
     COPY set_env.sh /a0/set_env.sh
     RUN chmod +x /a0/set_env.sh
@@ -66,5 +69,5 @@ FROM python:3.12-slim AS runtime
     # Set the entrypoint to ensure the script runs correctly
     ENTRYPOINT ["/a0/set_env.sh"]
 
-    # Start the SSH service in the background and keep the container running
+    # Start the SSH service in the background
     CMD ["service", "ssh", "start"]

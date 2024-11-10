@@ -1,23 +1,34 @@
-# Use a lightweight Python base image
-FROM python:3.12-slim
+# Step 1: Use Ubuntu as the base image
+FROM ubuntu:latest AS build-ollama
 
-# Install necessary packages for Ollama
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Step 2: Install dependencies - bash, curl, and any other necessary tools
+RUN apt-get update -y && apt-get install -y \
+    bash \
+    curl && \
+    rm -rf /var/lib/apt/lists/*  # Clean up unnecessary package cache
 
-# Install Ollama
-RUN curl -sSfL https://ollama.com/download.sh | sh
-
-# Set the working directory for the Ollama application
+# Step 3: Set the working directory 
 WORKDIR /ollama
 
-# Copy the Ollama setup script into the container
+# Step 4: Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | bash
+RUN chmod +x /usr/local/bin/ollama  
+
+# Step 5: Copy the `run_ollama.sh` script into the container and set execute permissions
 COPY run_ollama.sh /ollama/run_ollama.sh
 RUN chmod +x /ollama/run_ollama.sh
 
-# Expose the Ollama service port
-EXPOSE 11434
+# Step 6: Set environment variables (can be overridden at runtime)
+ENV OLLAMA_PORT=11434
+ENV OLLAMA_EMBED_MODEL=default-embed-model
+ENV OLLAMA_CHAT_MODEL=default-chat-model
+ENV OLLAMA_HOST=0.0.0.0
 
-# Use an entrypoint script to handle both setup and interactive sessions
-ENTRYPOINT ["/bin/bash", "-c", "/ollama/run_ollama.sh; exec /bin/bash"]
+# Step 7: Expose the Ollama service port
+EXPOSE ${OLLAMA_PORT}
+
+# Step 8: Set ENTRYPOINT to run the custom script directly
+ENTRYPOINT ["/ollama/run_ollama.sh"]
+
+# Step 9: Remove redundant entrypoint
+# ENTRYPOINT ["/usr/local/bin/ollama"]

@@ -1,9 +1,7 @@
-# agent-zero/docker-compose.yml
-
 services:
   agentzero:
     build:
-      context: ./agent-zero  # Build context for Agent Zero
+      context: ./agent-zero
       dockerfile: Dockerfile
     container_name: agentzero_${INSTANCE_ID}
     privileged: true
@@ -14,24 +12,40 @@ services:
     volumes:
       - ${LOCAL_AGENT_DIR}:/app
     ports:
-      - "80:${WEB_UI_PORT}" # Map for Web UI
-      - "22:22"  # Map for SSH
+      - "80:${WEB_UI_PORT}"
+      - "22:22"
     networks:
       - agent_network
     env_file:
       - ./agent-zero/.env
+    depends_on:
+      - ollama  # Ensure ollama starts first
 
   ollama:
     build:
-      context: ./ollama  # Build context for Ollama
-      dockerfile: Dockerfile
+      context: ./ollama # Path to your local Ollama Dockerfile directory
+      dockerfile: Dockerfile  # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
     environment:
-      - PORT=${OLLAMA_PORT} # (Do we need to map ports??)
+      - OLLAMA_EMBED_MODEL=${OLLAMA_EMBED_MODEL}
+      - OLLAMA_CHAT_MODEL=${OLLAMA_CHAT_MODEL}
+      - OLLAMA_PORT=${OLLAMA_PORT:-11434}  # Default port if not set
     networks:
       - agent_network
-    env_file:
-      - ./ollama/.env
+    ports:
+      - "${OLLAMA_PORT}:${OLLAMA_PORT}"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: ["gpu"]
+
 
 networks:
   agent_network:
     driver: bridge
+
+volumes:
+  ollama_data:
+    driver: local
