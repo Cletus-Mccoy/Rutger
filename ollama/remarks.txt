@@ -1,5 +1,0 @@
-Need to find a way to allow for automatic deployment of multiple models simulteanously
-
-Instances??
-.env needs to allow for setting of multiple models
-docker-compose needs to be configuring multiple containers

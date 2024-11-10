@@ -2,9 +2,9 @@
 set -x  # Print each command to standard output before executing it
 
 # Write the passthrough variables to the .env file
-echo "API_KEY_OPENAI=${API_KEY_OPENAI}" > .env
-echo "WEB_UI_PORT=${WEB_UI_PORT}" > .env
-echo "OLLAMA_BASE_URL=${OLLAMA_BASE_URL}" > .env
+# echo "API_KEY_OPENAI=${API_KEY_OPENAI}" > .env
+# echo "WEB_UI_PORT=${WEB_UI_PORT}" > .env
+# echo "OLLAMA_BASE_URL=${OLLAMA_BASE_URL}" > .env
 
 # Print the environment variables
 echo "Environment variables:"

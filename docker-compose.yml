@@ -25,6 +25,8 @@ services:
     build:
       context: ./ollama # Path to your local Ollama Dockerfile directory
       dockerfile: Dockerfile  # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
+    volumes:
+      - ${LOCAL_OLLAMA_DIR}:${OLLAMA_MODELS}  # Mount the local Ollama directory to the container
     environment:
       - OLLAMA_EMBED_MODEL=${OLLAMA_EMBED_MODEL}
       - OLLAMA_CHAT_MODEL=${OLLAMA_CHAT_MODEL}
@@ -45,7 +47,3 @@ services:
 networks:
   agent_network:
     driver: bridge
-
-volumes:
-  ollama_data:
-    driver: local
