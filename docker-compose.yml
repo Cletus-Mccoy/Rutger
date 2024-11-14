@@ -34,8 +34,6 @@ services:
       - OLLAMA_HOST=${OLLAMA_HOST}
     networks:
       - agent_network
-#    ports:
-#      - "${OLLAMA_PORT}:11434"
     deploy:
       resources:
         reservations:
