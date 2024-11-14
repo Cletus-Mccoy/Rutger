@@ -6,11 +6,11 @@ services:
     container_name: agentzero_${INSTANCE_ID}
     privileged: true
     environment:
-      - API_KEY_OPENAI=${API_KEY_OPENAI}
+#      - API_KEY_OPENAI=${API_KEY_OPENAI}
       - INSTANCE_ID=${INSTANCE_ID}
       - WEB_UI_PORT=${WEB_UI_PORT}
     volumes:
-      - ${LOCAL_AGENT_DIR}:/app
+      - AgentZeroInstances:/a0
     ports:
       - "80:${WEB_UI_PORT}"
       - "22:22"
@@ -26,15 +26,16 @@ services:
       context: ./ollama # Path to your local Ollama Dockerfile directory
       dockerfile: Dockerfile  # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
     volumes:
-      - ${LOCAL_OLLAMA_DIR}:${OLLAMA_MODELS}  # Mount the local Ollama directory to the container
+      - ${LOCAL_OLLAMA_DIR}:/root/.ollama/  # Mount the local Ollama directory to the container
     environment:
       - OLLAMA_EMBED_MODEL=${OLLAMA_EMBED_MODEL}
       - OLLAMA_CHAT_MODEL=${OLLAMA_CHAT_MODEL}
-      - OLLAMA_PORT=${OLLAMA_PORT:-11434}  # Default port if not set
+      - OLLAMA_PORT=${OLLAMA_PORT}
+      - OLLAMA_HOST=${OLLAMA_HOST}
     networks:
       - agent_network
-    ports:
-      - "${OLLAMA_PORT}:${OLLAMA_PORT}"
+#    ports:
+#      - "${OLLAMA_PORT}:11434"
     deploy:
       resources:
         reservations:
@@ -43,6 +44,9 @@ services:
               count: 1
               capabilities: ["gpu"]
 
+volumes:
+  AgentZeroInstances:
+    driver: local
 
 networks:
   agent_network:
