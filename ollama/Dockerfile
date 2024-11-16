@@ -18,17 +18,8 @@ RUN chmod +x /usr/local/bin/ollama
 COPY run_ollama.sh /ollama/run_ollama.sh
 RUN chmod +x /ollama/run_ollama.sh
 
-# Step 6: Set environment variables (can be overridden at runtime)
-ENV OLLAMA_PORT=11434
-ENV OLLAMA_EMBED_MODEL=default-embed-model
-ENV OLLAMA_CHAT_MODEL=default-chat-model
-ENV OLLAMA_HOST=0.0.0.0
-
-# Step 7: Expose the Ollama service port
+# Step 6: Expose the Ollama service port
 EXPOSE ${OLLAMA_PORT}
 
-# Step 8: Set ENTRYPOINT to run the custom script directly
+# Step 7: Set ENTRYPOINT to run the custom script directly
 ENTRYPOINT ["/ollama/run_ollama.sh"]
-
-# Step 9: Remove redundant entrypoint
-# ENTRYPOINT ["/usr/local/bin/ollama"]

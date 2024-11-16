@@ -15,7 +15,7 @@ REM Remove all unused containers, networks, images (both dangling and unreferenc
 docker system prune -a --volumes -y
 
 REM cd into the agent-zero directory and build the docker image with a specific name
-docker build -t agent-zero ./agent-zero --no-cache
+docker build -t agent-zero ./agent-zero
 
 REM cd into the ollama directory and build the docker image with a specific name
 docker build -t ollama ./ollama 
