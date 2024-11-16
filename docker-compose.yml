@@ -12,14 +12,13 @@ services:
     volumes:
       - AgentZeroInstances:/a0
     ports:
-      - "80:${WEB_UI_PORT}"
-      - "22:22"
+      - "80:${WEB_UI_PORT}"                             # Expose web UI port
     networks:
-      - agent_network
+      - agent_network                                   # Connect to shared agent_network
     env_file:
-      - ./agent-zero/.env
+      - ./agent-zero/.env                               # Load environment variables from .env file
     depends_on:
-      - ollama  # Ensure ollama starts first
+      - ollama                                          # Ensure ollama starts first
 
   ollama:
     build:

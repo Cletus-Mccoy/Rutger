@@ -1,5 +1,3 @@
-# Description: Dockerfile for building the Agent0 container image     
-
 # Stage 0 (build): Build the Agent0 image
 FROM python:3.12-slim AS build
 
@@ -26,48 +24,40 @@ FROM python:3.12-slim AS build
     # Install Python dependencies
     RUN $VIRTUAL_ENV/bin/pip install --no-cache-dir -r requirements.txt
 
-# Stage 1 (runtime): Create a minimal image with the virtual environment and necessary packages
+
+# Stage 1 (runtime): Set up runtime environment
 FROM python:3.12-slim AS runtime
 
-    # Install necessary packages for SSH and Docker
     RUN apt-get update && apt-get install -y \
-        openssh-server \
         docker.io \
         && rm -rf /var/lib/apt/lists/*
-
-    # Create the SSH directory
-    RUN mkdir /var/run/sshd
 
     # Copy the virtual environment from the build stage
     COPY --from=build /opt/venv /opt/venv
 
-    # Copy all files from the build stage to /a0 in the final stage
-    COPY --from=build /a0 /a0
-
-    # Set the PATH for the virtual environment
+    # Set PATH to include virtual environment
     ENV PATH="/opt/venv/bin:$PATH"
 
-    # Set the working directory
+    # Copy application code and other necessary files
+    COPY --from=build /a0 /a0
+
+    # Set the working directory 
     WORKDIR /a0
 
-    #  Copy the modified Agent0 web UI script (serving on 0.0.0.0 instead of 127.0.0.1)
+    # Copy the modified Agent0 files
     COPY run_ui.py run_ui.py
-
-     #  Copy the modified Agent0 initialization (use ollama instead of openAI)
     COPY initialize.py initialize.py
+    COPY startup.sh /a0/startup.sh
+    RUN chmod +x /a0/startup.sh
+    RUN ls -al /a0
 
-    # Copy environment setup script
-    COPY set_env.sh /a0/set_env.sh
-    RUN chmod +x /a0/set_env.sh
-
-    # Expose the SSH port
-    EXPOSE 22
-
-    # Expose the WebUI port (make sure to copy example.env to .env)
+    # Expose the WebUI port
     EXPOSE ${WEB_UI_PORT}
 
-    # Set the entrypoint to ensure the script runs correctly
-    ENTRYPOINT ["/a0/set_env.sh"]
+    # Keep the container running
+    CMD ["tail", "-f", "/dev/null"]
 
-    # Start the SSH service in the background
-    CMD ["service", "ssh", "start"]
+    # Entrypoint: Execute startup.sh
+    ENTRYPOINT ["/a0/startup.sh"]
+
+    

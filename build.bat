@@ -8,8 +8,8 @@ call copy_env.bat
 REM Stop all related docker containers
 docker-compose down
 
-REM Remove all Docker images
-FOR /F "tokens=*" %%i IN ('docker images -q') DO docker rmi -f %%i
+REM Remove Docker images related to the docker-compose file in this folder
+FOR /F "tokens=*" %%i IN ('docker-compose images -q') DO docker rmi -f %%i
 
 REM Remove all unused containers, networks, images (both dangling and unreferenced) & volumes.
 docker system prune -a --volumes -y
