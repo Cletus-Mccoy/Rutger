@@ -47,17 +47,17 @@ FROM python:3.12-slim AS runtime
     # Copy the modified Agent0 files
     COPY run_ui.py run_ui.py
     COPY initialize.py initialize.py
-    COPY startup.sh /a0/startup.sh
-    RUN chmod +x /a0/startup.sh
+    COPY startup.sh startup.sh
+    RUN chmod +x startup.sh
     RUN ls -al /a0
 
     # Expose the WebUI port
     EXPOSE ${WEB_UI_PORT}
 
-    # Keep the container running
-    CMD ["tail", "-f", "/dev/null"]
-
     # Entrypoint: Execute startup.sh
     ENTRYPOINT ["/a0/startup.sh"]
+    
+    # Keep the container running
+    CMD ["tail", "-f", "/dev/null"]
 
     

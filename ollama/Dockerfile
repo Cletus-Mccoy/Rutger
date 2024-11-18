@@ -23,3 +23,6 @@ EXPOSE ${OLLAMA_PORT}
 
 # Step 7: Set ENTRYPOINT to run the custom script directly
 ENTRYPOINT ["/ollama/run_ollama.sh"]
+
+# Keep the container running
+CMD ["tail", "-f", "/dev/null"]

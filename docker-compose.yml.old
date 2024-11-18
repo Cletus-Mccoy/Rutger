@@ -1,27 +1,37 @@
 services:
   agentzero:
     build:
-      context: ./DinD
+      context: ./agent-zero
       dockerfile: Dockerfile
-    container_name: agentzero_${INSTANCE_ID}-dind
+    container_name: agentzero_${INSTANCE_ID}
     privileged: true
+    environment:
+#      - API_KEY_OPENAI=${API_KEY_OPENAI}
+      - INSTANCE_ID=${INSTANCE_ID}
+      - WEB_UI_PORT=${WEB_UI_PORT}
     volumes:
       - AgentZeroInstances:/a0
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "80:${WEB_UI_PORT}"                             # Expose web UI port
     networks:
       - agent_network                                   # Connect to shared agent_network
     env_file:
-      - ./DinD/.env                               # Load environment variables from .env file
+      - ./agent-zero/.env                               # Load environment variables from .env file
     depends_on:
       - ollama                                          # Ensure ollama starts first
 
   ollama:
     build:
       context: ./ollama # Path to your local Ollama Dockerfile directory
-      dockerfile: Dockerfile  # Name of the Dockerfile 
+      dockerfile: Dockerfile  # Name of the Dockerfile (defaults to "Dockerfile" if not specified)
     volumes:
       - ${LOCAL_OLLAMA_DIR}:/root/.ollama/  # Mount the local Ollama directory to the container
+    environment:
+      - OLLAMA_EMBED_MODEL=${OLLAMA_EMBED_MODEL}
+      - OLLAMA_CHAT_MODEL=${OLLAMA_CHAT_MODEL}
+      - OLLAMA_PORT=${OLLAMA_PORT}
+      - OLLAMA_HOST=${OLLAMA_HOST}
     networks:
       - agent_network
     deploy:
@@ -31,8 +41,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: ["gpu"]
-    env_file:
-      - ./ollama/.env   
 
 volumes:
   AgentZeroInstances:

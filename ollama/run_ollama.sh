@@ -13,7 +13,7 @@ else
 fi
 
 # Wait for the ollama serve command to finish initializing
-sleep 5
+sleep 10
 
 # Check if NVIDIA GPU is available for Docker GPU support
 if command -v nvidia-smi >/dev/null 2>&1; then

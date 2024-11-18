@@ -10,7 +10,7 @@ else
 fi
 
 # Start the Docker daemon
-dockerd-entrypoint.sh
+# dockerd-entrypoint.sh
 
-# Launch Agent0
+# Launch Agent0S
 python run_ui.py
