@@ -56,10 +56,10 @@ FROM python:3.12-slim AS runtime
     # Expose the WebUI port
     EXPOSE ${WEB_UI_PORT}
 
-    # Keep the container running
-    CMD ["tail", "-f", "/dev/null"]
-
     # Entrypoint: Execute startup.sh
     ENTRYPOINT ["/a0/startup.sh"]
+    
+    # Keep the container running
+    CMD ["tail", "-f", "/dev/null"]
 
     
