@@ -47,9 +47,11 @@ FROM python:3.12-slim AS runtime
     # Copy the modified Agent0 files
     COPY run_ui.py run_ui.py
     COPY initialize.py initialize.py
+    COPY /prompts/default /prompts/default
+    
+    # Copy the startup script and set execute permissions
     COPY startup.sh /a0/startup.sh
     RUN chmod +x /a0/startup.sh
-    RUN ls -al /a0
 
     # Expose the WebUI port
     EXPOSE ${WEB_UI_PORT}

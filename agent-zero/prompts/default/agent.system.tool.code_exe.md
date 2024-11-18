@@ -1,14 +1,16 @@
 ### code_execution_tool:
-Execute terminal commands, Python, or Node.js code. 
-Use the "code" argument for properly escaped and indented code.  
-Specify the runtime environment using the "runtime" argument: "terminal", "python", "nodejs", "output" (wait for next output), or "reset" (kill process).  
-For interactive terminal prompts (e.g., Y/N), use "terminal" in the next step with your response.  Install packages via `pip`, `npm`, or `apt-get` within the "terminal" runtime.
+Execute provided terminal commands, python code or nodejs code.
+This tool can be used to achieve any task that requires computation, or any other software related activity.
+Place your code escaped and properly indented in the "code" argument.
+Select the corresponding runtime with "runtime" argument. Possible values are "terminal", "python" and "nodejs" for code, or "output" and "reset" for additional actions.
+Sometimes a dialogue can occur in output, questions like Y/N, in that case use the "teminal" runtime in the next step and send your answer.
+If the code is running long, you can use runtime "output" to wait for next output part or use runtime "reset" to kill the process.
+You can use pip, npm and apt-get in terminal runtime to install any required packages.
 IMPORTANT: Never use implicit print or implicit output, it does not work! If you need output of your code, you MUST use print() or console.log() to output selected variables. 
-Analyze errors using `knowledge_tool`. 
-Replace placeholder IDs/demo data with actual variables. 
-Do not combine with other tools (except `thoughts`). 
-Wait for the response before using other tools.
-ALWAYS put print/log statements inside and at the end of your code to get results.
+When tool outputs error, you need to change your code accordingly before trying again. knowledge_tool can help analyze errors.
+IMPORTANT!: Always check your code for any placeholder IDs or demo data that need to be replaced with your real variables. Do not simply reuse code snippets from tutorials.
+Do not use in combination with other tools except for thoughts. Wait for response before using other tools.
+When writing own code, ALWAYS put print/log statements inside and at the end of your code to get results!
 **Example usages:**
 1. Execute python code
 ~~~json
