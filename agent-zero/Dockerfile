@@ -55,6 +55,13 @@ WORKDIR /a0
 # Copy the modified Agent0 files
 COPY run_ui.py run_ui.py
 COPY initialize.py initialize.py
+
+# Copy the modified Agent0 folders and replace their contents
+COPY --chown=root:root /instruments/default/ /a0/instruments/default/
+COPY --chown=root:root /knowledge/default/main/about/ /a0/knowledge/default/main/about/
+COPY --chown=root:root /prompts/ /a0/prompts/
+
+# Copy the startup script
 COPY startup.sh startup.sh
 RUN chmod +x startup.sh
 
