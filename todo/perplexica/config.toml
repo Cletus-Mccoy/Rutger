@@ -5,8 +5,8 @@ ANTHROPIC = ""
 
 [API_ENDPOINTS]
 OLLAMA = "http://host.docker.internal:11434"
-SEARXNG = "http://searxng:8080"  
+SEARXNG = "localhost:4000"
 
 [GENERAL]
-PORT = 3_001
+PORT = 3001
 SIMILARITY_MEASURE = "cosine"
