@@ -14,13 +14,6 @@ FOR /F "tokens=*" %%i IN ('docker-compose images -q') DO docker rmi -f %%i
 REM Remove all unused containers, networks, images (both dangling and unreferenced) & volumes.
 docker system prune -a --volumes
 
-REM cd into the agent-zero directory and build the docker image with a specific name
-REM docker build -t agent-zero ./agent-zero
-docker build -t agent-zero ./DinD --no-cache
-
-REM cd into the ollama directory and build the docker image with a specific name
-docker build -t ollama ./ollama
-
 REM Run the docker-compose file with the most recent built images
-docker-compose up -d
+docker-compose up -d --build
 

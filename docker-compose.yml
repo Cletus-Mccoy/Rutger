@@ -1,9 +1,9 @@
 services:
   agentzero:
     build:
-      context: ./DinD
+      context: ./agent-zero
       dockerfile: Dockerfile
-    container_name: agentzero_${INSTANCE_ID}-dind
+    container_name: agentzero_${INSTANCE_ID}
     privileged: true
     volumes:
       - AgentZeroInstances:/a0
@@ -12,7 +12,7 @@ services:
     networks:
       - agent_network                                   # Connect to shared agent_network
     env_file:
-      - ./DinD/.env                               # Load environment variables from .env file
+      - ./agent-zero/.env                               # Load environment variables from .env file
     depends_on:
       - ollama                                          # Ensure ollama starts first
 
