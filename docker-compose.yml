@@ -6,7 +6,7 @@ services:
     container_name: agentzero_${INSTANCE_ID}
     privileged: true
     volumes:
-      - AgentZeroInstances:/a0
+      - AgentZeroInstances:/a0                          # Mount the local AgentZero directory to the container    
     ports:
       - "80:${WEB_UI_PORT}"                             # Expose web UI port
     networks:
@@ -18,8 +18,9 @@ services:
 
   ollama:
     build:
-      context: ./ollama # Path to your local Ollama Dockerfile directory
-      dockerfile: Dockerfile  # Name of the Dockerfile 
+      context: ./ollama 
+      dockerfile: Dockerfile  
+    container_name: ollama  
     volumes:
       - OllamaModels:/root/.ollama/  # Mount the local Ollama directory to the container
     networks:
@@ -34,12 +35,45 @@ services:
     env_file:
       - ./ollama/.env   
 
+  searxng:
+      image: docker.io/searxng/searxng:latest
+      container_name: searxng
+      volumes:
+        - ./perplexica-874505c/searxng:/etc/searxng:rw
+      networks:
+        - agent_network
+      restart: unless-stopped
+
+  perplexica-backend:
+    build:
+      context: ./perplexica-874505c
+      dockerfile: backend.dockerfile
+    container_name: perplexica-backend
+    image: itzcrazykns1337/perplexica-backend:main
+    environment:
+      - SEARXNG_API_URL=http://searxng:8080
+    depends_on:
+      - searxng
+    volumes:
+      - Perplexica-DBstore:/home/perplexica/data
+      - Uploads:/home/perplexica/uploads
+      - ./perplexica-874505c/config.toml:/home/perplexica/config.toml
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - agent_network
+    restart: unless-stopped
+
+
 volumes:
   AgentZeroInstances:
     driver: local
   OllamaModels:
     driver: local
+  Perplexica-DBstore:
+  Uploads:
 
 networks:
   agent_network:
     driver: bridge
+  
