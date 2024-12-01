@@ -21,7 +21,7 @@ services:
       context: ./ollama # Path to your local Ollama Dockerfile directory
       dockerfile: Dockerfile  # Name of the Dockerfile 
     volumes:
-      - ${LOCAL_OLLAMA_DIR}:/root/.ollama/  # Mount the local Ollama directory to the container
+      - OllamaModels:/root/.ollama/  # Mount the local Ollama directory to the container
     networks:
       - agent_network
     deploy:
@@ -36,6 +36,8 @@ services:
 
 volumes:
   AgentZeroInstances:
+    driver: local
+  OllamaModels:
     driver: local
 
 networks:
