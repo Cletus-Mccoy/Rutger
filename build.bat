@@ -15,7 +15,7 @@ REM Remove all unused containers, networks, images (both dangling and unreferenc
 docker system prune -a --volumes
 
 REM Build the docker images
-docker build -t agent-zero ./agent-zero --no-cache
+docker build -t agent-zero ./agent-zero
 docker build -t ollama ./ollama
 docker build -t perplexica ./perplexica
 
