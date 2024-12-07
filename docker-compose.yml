@@ -17,6 +17,20 @@ services:
     depends_on:
       - ollama                                          # Ensure ollama starts first
 
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - _network
+    ports:
+      - "8123:8123"
+
   ollama:
     build:
       context: ./ollama 
@@ -76,5 +90,8 @@ volumes:
 
 networks:
   agent_network:
+  _network:
     driver: bridge
+
+  
   
