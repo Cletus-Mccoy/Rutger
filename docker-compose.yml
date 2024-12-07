@@ -6,7 +6,8 @@ services:
     container_name: agentzero_${INSTANCE_ID}
     privileged: true
     volumes:
-      - AgentZeroInstances:/a0                          # Mount the local AgentZero directory to the container    
+      - AgentZeroInstances:/a0
+      - ${LOCAL_AGENT_DIR}/agent_${INSTANCE_ID}:/a0/work_dir                   
     ports:
       - "80:${WEB_UI_PORT}"                             # Expose web UI port
     networks:
@@ -47,7 +48,7 @@ services:
   perplexica-backend:
     build:
       context: ./perplexica-874505c
-      dockerfile: backend.dockerfile
+      dockerfile: Dockerfile
     container_name: perplexica-backend
     image: itzcrazykns1337/perplexica-backend:main
     environment:

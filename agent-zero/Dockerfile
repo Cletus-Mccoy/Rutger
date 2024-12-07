@@ -53,17 +53,17 @@ COPY --from=build /a0 /a0
 WORKDIR /a0
 
 # Copy the modified Agent0 files
-COPY /a0/run_ui.py run_ui.py
-COPY /a0/initialize.py initialize.py
+COPY /a0/run_ui.py /a0/run_ui.py
+COPY /a0/initialize.py /a0/initialize.py
 
 # Copy the modified Agent0 folders and replace their contents
-COPY --chown=root:root /a0/instruments/default/ /a0/instruments/default/
-COPY --chown=root:root /a0/knowledge/default/main/about/ /a0/knowledge/default/main/about/
-COPY --chown=root:root /a0/prompts/ /a0/prompts/
-COPY --chown=root:root /a0/python/ /a0/python/
+COPY /a0/instruments/default/ /a0/instruments/default/
+COPY /a0/knowledge/default/main/about/ /a0/knowledge/default/main/about/
+COPY /a0/prompts/ /a0/prompts/
+COPY /a0/python/ /a0/python/
 
 # Copy the startup script
-COPY startup.sh startup.sh
+COPY startup.sh /a0/startup.sh
 RUN chmod +x startup.sh
 
 # Expose the WebUI port

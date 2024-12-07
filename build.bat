@@ -17,7 +17,4 @@ docker system prune -a --volumes
 REM Build the docker images
 docker build -t agent-zero ./agent-zero
 docker build -t ollama ./ollama
-docker build -t perplexica ./perplexica
-
-
-
+docker build -t perplexica ./perplexica-874505c
