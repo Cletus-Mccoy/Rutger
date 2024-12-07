@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
     privileged: true
     networks:
-      - _network
+      - agent_network
     ports:
       - "8123:8123"
 
