@@ -4,8 +4,8 @@ GROQ = ""
 ANTHROPIC = ""
 
 [API_ENDPOINTS]
-OLLAMA = "http://host.docker.internal:11434"
-SEARXNG = "localhost:4000"
+OLLAMA = "http://ollama:11434"
+SEARXNG = "http://searxng:8080"
 
 [GENERAL]
 PORT = 3001
