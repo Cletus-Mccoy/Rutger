@@ -1,15 +1,13 @@
 services:
   agentzero:
-    build:
-      context: ./agent-zero
-      dockerfile: Dockerfile
+    image: docker.io/frdel/agent-zero-run:testing
     container_name: agentzero_${INSTANCE_ID}
-    privileged: true
+#    privileged: true
     volumes:
       - AgentZeroInstances:/a0
       - ${LOCAL_AGENT_DIR}/agent_${INSTANCE_ID}:/a0/work_dir                   
     ports:
-      - "80:${WEB_UI_PORT}"                             # Expose web UI port
+      - "80:80"                            # Expose web UI port
     networks:
       - agent_network                                   # Connect to shared agent_network
     env_file:

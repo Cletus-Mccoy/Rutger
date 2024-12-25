@@ -48,6 +48,15 @@ if command -v /usr/local/bin/ollama >/dev/null 2>&1; then
         fi
     fi
 
+    echo "Running the chat model: ${OLLAMA_UTILITY_MODEL}..."
+    if ! /usr/local/bin/ollama run "${OLLAMA_UTILITY_MODEL}"; then
+        echo "Run failed. Retrying in 10 seconds..."
+        sleep 10
+        if ! /usr/local/bin/ollama run "${OLLAMA_UTILITY_MODEL}"; then
+            echo "Run failed again."
+        fi
+    fi
+
     echo "Running the chat model: ${OLLAMA_CHAT_MODEL}..."
     if ! /usr/local/bin/ollama run "${OLLAMA_CHAT_MODEL}"; then
         echo "Run failed. Retrying in 10 seconds..."
