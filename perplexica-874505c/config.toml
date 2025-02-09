@@ -5,7 +5,7 @@ ANTHROPIC = ""
 
 [API_ENDPOINTS]
 OLLAMA = "http://ollama:11434"
-SEARXNG = "http://agent-zero:8888"
+SEARXNG = "http://agent-zero:8888/search"
 
 [GENERAL]
 PORT = 3001
