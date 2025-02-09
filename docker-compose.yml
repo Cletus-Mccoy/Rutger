@@ -1,29 +1,35 @@
 services:
   agentzero:
-    image: docker.io/frdel/agent-zero-run:testing
-    container_name: agentzero_${INSTANCE_ID}
-#    privileged: true
+    image: docker.io/frdel/agent-zero-run
+    container_name: agent-zero
     volumes:
       - AgentZeroInstances:/a0
-      - ${LOCAL_AGENT_DIR}/agent_${INSTANCE_ID}:/a0/work_dir                   
+      - ${LOCAL_AGENT_DIR}/agent:/a0/work_dir
+      - ./agent-zero/a0/tmp/settings.json:/a0/tmp/settings.json
+      - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
+      - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
+      - ./agent-zero/a0/knowledge/default/main/about:/a0/knowledge/default/main/about
+      # - ./agent-zero/a0/instruments/default:/a0/instruments/default
+      - ./agent-zero/a0/settings.yml:/etc/searxng/settings.yml
     ports:
-      - "80:80"                            # Expose web UI port
+      - "50001:80"
     networks:
-      - agent_network                                   # Connect to shared agent_network
+      - agent-network
     env_file:
-      - ./agent-zero/.env                               # Load environment variables from .env file
+      - ./agent-zero/.env
     depends_on:
-      - ollama                                          # Ensure ollama starts first
+      - ollama
+      - perplexica-backend
 
   ollama:
     build:
-      context: ./ollama 
-      dockerfile: Dockerfile  
-    container_name: ollama  
+      context: ./ollama
+      dockerfile: Dockerfile
+    container_name: ollama
     volumes:
-      - OllamaModels:/root/.ollama/  # Mount the local Ollama directory to the container
+      - OllamaModels:/root/.ollama/
     networks:
-      - agent_network
+      - agent-network
     deploy:
       resources:
         reservations:
@@ -32,16 +38,7 @@ services:
               count: 1
               capabilities: ["gpu"]
     env_file:
-      - ./ollama/.env   
-
-  searxng:
-      image: docker.io/searxng/searxng:latest
-      container_name: searxng
-      volumes:
-        - ./perplexica-874505c/searxng:/etc/searxng:rw
-      networks:
-        - agent_network
-      restart: unless-stopped
+      - ./ollama/.env
 
   perplexica-backend:
     build:
@@ -51,18 +48,14 @@ services:
     image: itzcrazykns1337/perplexica-backend:main
     environment:
       - SEARXNG_API_URL=http://searxng:8080
-    depends_on:
-      - searxng
     volumes:
       - Perplexica-DBstore:/home/perplexica/data
-      - Uploads:/home/perplexica/uploads
       - ./perplexica-874505c/config.toml:/home/perplexica/config.toml
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     networks:
-      - agent_network
+      - agent-network
     restart: unless-stopped
-
 
 volumes:
   AgentZeroInstances:
@@ -70,9 +63,8 @@ volumes:
   OllamaModels:
     driver: local
   Perplexica-DBstore:
-  Uploads:
+    driver: local
 
 networks:
-  agent_network:
+  agent-network:
     driver: bridge
-  

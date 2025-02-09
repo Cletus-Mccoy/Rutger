@@ -1,12 +1,32 @@
-Installer for an AI-agent based on agent-zero & ollama.
+# AI Agent Environment Setup
 
-The installer will build the appropriate container by running `.\build.bat` (Windows)
+This project sets up an AI agent environment using agent-zero and ollama in Docker containers.
 
-**Instructions:**
+## Setup Instructions
 
-1. Fill in any relevant variables in the `.env` file located in the root directory.
-2. Group keys with a `# [header]` so the `copy_env.bat` will copy them to a .env file in the correct folder when run later.
-3. Run the build script to copy these variables to the appropriate containers.
+1. Clone this repository
+2. Configure environment variables:
+   - Edit the `.env` file in the root directory
+   - Variables are grouped using `# [header]` format
+   - Required sections:
+     - `[Local]` - Instance configuration
+     - `[ollama]` - Ollama model settings
+     - `[agent-zero]` - Agent configuration
+
+3. Build the environment:
+   - Windows: Run `.\build.bat`
+   - This will:
+     - Copy environment variables to required locations
+     - Build Docker images
+     - Start containers using docker-compose
+
+## Environment Structure
+
+The environment consists of two main components:
+- Ollama: Runs the AI models
+- Agent-Zero: Handles agent orchestration
+
+## Container Setup
 
 The build script will call the `copy_env` script which in turn will make sure the containers have the necessary keys in a .env file in the folders containing the Dockerfile.
 
@@ -24,12 +44,6 @@ docker-compose up -d
 
 Todo:
 
-* ollama support for gpu
-* ollama connection to agent-zero
-* edit initialize.py in agent-zero
-* docker-compose for built images 
-* publish images to dockerhub
 * reinforcement learning
-* dataset acces through volume
 * production server 
 * hosting
