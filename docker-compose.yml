@@ -6,8 +6,8 @@ services:
       - AgentZeroInstances:/a0
       - ${LOCAL_AGENT_DIR}/agent:/a0/work_dir
       - ./agent-zero/a0/tmp/settings.json:/a0/tmp/settings.json
-      # - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
-      # - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
+      - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
+      - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
       - ./agent-zero/a0/knowledge/default/main/about:/a0/knowledge/default/main/about
       # - ./agent-zero/a0/instruments/default:/a0/instruments/default
       - ./agent-zero/a0/settings.yml:/etc/searxng/settings.yml
@@ -47,7 +47,7 @@ services:
     container_name: perplexica-backend
     image: itzcrazykns1337/perplexica-backend:main
     environment:
-      - SEARXNG_API_URL=http://searxng:8080
+      - SEARXNG_API_URL=http://searxng:8888
     volumes:
       - Perplexica-DBstore:/home/perplexica/data
       - ./perplexica-874505c/config.toml:/home/perplexica/config.toml

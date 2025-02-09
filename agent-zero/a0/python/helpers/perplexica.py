@@ -7,15 +7,13 @@ async def search(query: str):
     return await runtime.call_development_function(_search, query=query)
 
 async def _search(query: str):
-    
     headers = {
         "Content-Type": "application/json"
     }
-    
     payload = {
         "chatModel": {
             "provider": "ollama",
-            "model": "llama3.1:latest"
+            "model": "llama3.2:latest"
         },
         "embeddingModel": {
             "provider": "ollama",
@@ -28,5 +26,5 @@ async def _search(query: str):
     }
     
     async with aiohttp.ClientSession() as session:
-        async with session.post(URL, headers=headers, json=payload) as response:
+        async with session.post(URL, json=payload, headers=headers) as response:
             return await response.json()
