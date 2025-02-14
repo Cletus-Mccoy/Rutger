@@ -1,6 +1,6 @@
 services:
   agent-zero:
-    image: docker.io/frdel/agent-zero-run:testing
+    image: docker.io/frdel/agent-zero-run:v0.8.1.1
     container_name: agent-zero
     volumes:
       - AgentZeroInstances:/a0
@@ -10,7 +10,7 @@ services:
       - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
       - ./agent-zero/a0/knowledge/default/main/about:/a0/knowledge/default/main/about
       # - ./agent-zero/a0/instruments/default:/a0/instruments/default
-      - ./agent-zero/a0/settings.yml:/etc/searxng/settings.yml
+      - ./agent-zero/searxng/settings.yml:/etc/searxng/settings.yml
     ports:
       - "50001:80"
     networks:
