@@ -1,6 +1,6 @@
 {
     "chat_model_provider": "OLLAMA",
-    "chat_model_name": "llama3.2",
+    "chat_model_name": "llama3.1",
     "chat_model_temperature": 0.0,
     "chat_model_kwargs": {},
     "chat_model_ctx_length": 20000,
@@ -11,7 +11,7 @@
     "util_model_provider": "OLLAMA",
     "util_model_name": "llama3.2",
     "util_model_temperature": 0.0,
-    "util_model_ctx_length": 1200000,
+    "util_model_ctx_length": 8192,
     "util_model_ctx_input": 0.7,
     "util_model_kwargs": {},
     "util_model_rl_requests": 60,
