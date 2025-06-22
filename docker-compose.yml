@@ -51,7 +51,6 @@ services:
     environment:
       - SEARXNG_API_URL=http://agent-zero:8888
       - DATA_DIR=/home/perplexica
-      - OPENAI_API_KEY=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
     ports:
       - 3000:3000   
     networks:
