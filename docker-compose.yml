@@ -4,7 +4,7 @@ services:
     container_name: agent-zero
     volumes:
       - AgentZeroInstances:/a0
-      - ${LOCAL_AGENT_DIR}/agent:/a0/work_dir
+      - ${LOCAL_AGENT_DIR}/agent:/root
       - ./agent-zero/a0/tmp/settings.json:/a0/tmp/settings.json
       - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
       - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
@@ -19,8 +19,8 @@ services:
       - agent-network
     env_file:
       - ./agent-zero/.env
-    # depends_on:
-    #   - ollama
+  #   depends_on:
+  #     - ollama
 
   # ollama:
   #   build:
@@ -48,7 +48,6 @@ services:
       context: .
       dockerfile: ./perplexica/app.dockerfile
     environment:
-      - SEARXNG_API_URL=http://agent-zero:8888
       - DATA_DIR=/home/perplexica
     ports:
       - 3000:3000   

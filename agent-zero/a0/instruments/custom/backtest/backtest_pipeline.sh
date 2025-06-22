@@ -28,9 +28,9 @@ TOP_N=3
 SYMBOL_LIST=$(IFS=, ; echo "${SYMBOLS[*]}")
 
 echo "🚀 Starting backtest pipeline for: $SYMBOL_LIST"
-python3 backtest_pipeline.py
+python3 /a0/instruments/custom/backtest/backtest_pipeline.py
 
 # If you want to customize symbols or trials:
-# python3 backtest_pipeline.py --symbols "DOGE,SOL,AVAX" --n_trials 50 --top_n 2
+# python3 /a0/instruments/custom/backtest/backtest_pipeline.py --symbols "DOGE,SOL,AVAX" --n_trials 50 --top_n 2
 
 echo "✅ Backtest pipeline completed."

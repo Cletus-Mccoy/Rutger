@@ -1,6 +1,6 @@
 {
     "chat_model_provider": "OPENAI",
-    "chat_model_name": "gpt-4.1",
+    "chat_model_name": "gpt-4o-mini",
     "chat_model_kwargs": {
         "temperature": "0"
     },
