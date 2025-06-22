@@ -1,30 +1,35 @@
 import aiohttp
-from python.helpers import runtime
+import asyncio
 
-URL = "http://perplexica-backend:3001/api/search"
+URL = "http://perplexica-backend:3000/api/search"
 
-async def search(query: str):
-    return await runtime.call_development_function(_search, query=query)
-
-async def _search(query: str):
-    headers = {
-        "Content-Type": "application/json"
-    }
+async def search(question):
+    headers = {"Content-Type": "application/json"}
     payload = {
         "chatModel": {
-            "provider": "ollama",
-            "model": "llama3.2:latest"
+            "provider": "openai",
+            "name": "gpt-4o-mini"
         },
         "embeddingModel": {
-            "provider": "ollama",
-            "model": "nomic-embed-text:latest"
+            "provider": "openai",
+            "name": "text-embedding-3-large"
         },
         "optimizationMode": "speed",
         "focusMode": "webSearch",
-        "query": query,
-        "history": []
+        "query": question,
+        "history": [],
+        "stream": False
     }
-    
     async with aiohttp.ClientSession() as session:
         async with session.post(URL, json=payload, headers=headers) as response:
-            return await response.json()
+            print('Status:', response.status)
+            try:
+                data = await response.json()
+                print('JSON response:', data)
+                return data
+            except Exception as e:
+                text = await response.text()
+                print('Non-JSON response:', text)
+                print('Error:', e)
+                return {"message": "Failed to parse JSON response", "error": str(e)} 
+

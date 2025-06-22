@@ -9,8 +9,7 @@ services:
       - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
       - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
       - ./agent-zero/a0/knowledge/default/main/about:/a0/knowledge/default/main/about
-      - ./perplexica-874505c/config.toml:/home/perplexica/config.toml
-      # - ./agent-zero/a0/instruments/custom:/a0/instruments/custom
+      - ./agent-zero/a0/instruments/custom:/a0/instruments/custom
       - ./agent-zero/searxng/limiter.toml:/etc/searxng/limiter.toml
       - ./agent-zero/searxng/settings.yml:/etc/searxng/settings.yml
       - ./agent-zero/searxng/uwsgi.ini:/etc/searxng/uwsgi.ini
@@ -20,27 +19,27 @@ services:
       - agent-network
     env_file:
       - ./agent-zero/.env
-    depends_on:
-      - ollama
+    # depends_on:
+    #   - ollama
 
-  ollama:
-    build:
-      context: ./ollama
-      dockerfile: Dockerfile
-    container_name: ollama
-    volumes:
-      - OllamaModels:/root/.ollama/
-    networks:
-      - agent-network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: ["gpu"]
-    env_file:
-      - ./ollama/.env
+  # ollama:
+  #   build:
+  #     context: ./ollama
+  #     dockerfile: Dockerfile
+  #   container_name: ollama
+  #   volumes:
+  #     - OllamaModels:/root/.ollama/
+  #   networks:
+  #     - agent-network
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: ["gpu"]
+  #   env_file:
+  #     - ./ollama/.env
 
   perplexica-backend:
     container_name: perplexica-backend
@@ -71,7 +70,6 @@ volumes:
 networks:
   agent-network:
     driver: bridge
-  local-network:
-    driver: bridge
+
     
 
