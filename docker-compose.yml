@@ -1,6 +1,6 @@
 services:
   agent-zero:
-    image: docker.io/frdel/agent-zero-run:v0.8.1.1
+    image: docker.io/frdel/agent-zero-run:latest
     container_name: agent-zero
     volumes:
       - AgentZeroInstances:/a0
@@ -9,8 +9,11 @@ services:
       - ./agent-zero/a0/python/tools/knowledge_tool.py:/a0/python/tools/knowledge_tool.py
       - ./agent-zero/a0/python/helpers/perplexica.py:/a0/python/helpers/perplexica.py
       - ./agent-zero/a0/knowledge/default/main/about:/a0/knowledge/default/main/about
-      # - ./agent-zero/a0/instruments/default:/a0/instruments/default
+      - ./perplexica-874505c/config.toml:/home/perplexica/config.toml
+      # - ./agent-zero/a0/instruments/custom:/a0/instruments/custom
+      - ./agent-zero/searxng/limiter.toml:/etc/searxng/limiter.toml
       - ./agent-zero/searxng/settings.yml:/etc/searxng/settings.yml
+      - ./agent-zero/searxng/uwsgi.ini:/etc/searxng/uwsgi.ini
     ports:
       - "50001:80"
     networks:
@@ -19,7 +22,6 @@ services:
       - ./agent-zero/.env
     depends_on:
       - ollama
-      - perplexica-backend
 
   ollama:
     build:
@@ -41,20 +43,22 @@ services:
       - ./ollama/.env
 
   perplexica-backend:
-    build:
-      context: ./perplexica-874505c
-      dockerfile: Dockerfile
     container_name: perplexica-backend
-    image: itzcrazykns1337/perplexica-backend:main
+    image: itzcrazykns1337/perplexica:main
+    build:
+      context: .
+      dockerfile: ./perplexica/app.dockerfile
     environment:
-      - SEARXNG_API_URL=http://searxng:8888
-    volumes:
-      - Perplexica-DBstore:/home/perplexica/data
-      - ./perplexica-874505c/config.toml:/home/perplexica/config.toml
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+      - SEARXNG_API_URL=http://agent-zero:8888
+      - DATA_DIR=/home/perplexica
+      - OPENAI_API_KEY=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
+    ports:
+      - 3000:3000   
     networks:
       - agent-network
+    volumes:
+      - Perplexica-DBstore:/home/perplexica/data
+      - ./perplexica/config.toml:/home/perplexica/config.toml
     restart: unless-stopped
 
 volumes:
@@ -68,3 +72,7 @@ volumes:
 networks:
   agent-network:
     driver: bridge
+  local-network:
+    driver: bridge
+    
+
